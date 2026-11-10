@@ -1,0 +1,8 @@
+/build/
+.vs/
+.vscode/
+CMakeUserPresets.json
+vcpkg_installed/
+.DS_Store
+
+startup.log

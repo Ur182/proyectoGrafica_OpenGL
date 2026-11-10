@@ -55,7 +55,7 @@ La cámara de primera persona permite caminar y mirar alrededor. La cámara de t
 
 ## 6. Compilación y ejecución
 
-Seguir los comandos de `README.md` con Visual Studio 2022 Win32 (x86) y vcpkg. Registrar aquí la versión de Windows, el GPU, la configuración compilada y el resultado real:
+Seguir los comandos de `README.md` con Visual Studio 2022 Win32 (x86) y vcpkg. Si se cierra inesperadamente, revisar `startup.log` junto al ejecutable. Registrar aquí la versión de Windows, el GPU, la configuración compilada y el resultado real:
 
 - Resultado de compilación: [pendiente]
 - Resultado de ejecución: [pendiente]

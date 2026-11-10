@@ -70,4 +70,4 @@ El preset `windows-win32` configura Visual Studio 2022 para compilar Win32 (x86)
 
 ## Estado de verificación
 
-La entrega está configurada para Win32 (x86), que es la plataforma requerida para tu prueba. La compilación local en este entorno no fue posible porque CMake y GLEW no están instalados; el flujo de Windows compila un paquete Win32. Revisa la formación, las tomas, el gol/marcador y el traslado médico en la VM. Los campos de integrantes, firmas, capturas comparativas y video de demostración siguen requiriendo información y evidencia real del equipo.
+La entrega está configurada para Win32 (x86), que es la plataforma requerida para tu prueba. Al iniciar, el programa crea `startup.log` en la carpeta del ejecutable; si se cierra, ese archivo indica la última etapa alcanzada y el código de excepción. La compilación local en este entorno no fue posible porque CMake y GLEW no están instalados; el flujo de Windows compila un paquete Win32. Revisa la formación, las tomas, el gol/marcador y el traslado médico en la VM. Los campos de integrantes, firmas, capturas comparativas y video de demostración siguen requiriendo información y evidencia real del equipo.
