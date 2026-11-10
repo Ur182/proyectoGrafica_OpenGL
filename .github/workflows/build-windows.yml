@@ -33,6 +33,61 @@ jobs:
           $toolchain = Join-Path $env:VCPKG_ROOT 'scripts\buildsystems\vcpkg.cmake'
           cmake -S $source -B (Join-Path $source 'build') -G 'Visual Studio 17 2022' -A x64 `
             "-DCMAKE_TOOLCHAIN_FILE=$toolchain" `
+            -DVCPKG_TARGET_TRIPLET=x64-windows-static `
+            '-DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded$<$<CONFIG:Debug>:Debug>'
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          cmake --build (Join-Path $source 'build') --config Release --parallel
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
+          $dist = Join-Path $env:GITHUB_WORKSPACE 'dist'
+          New-Item -ItemType Directory -Force -Path $dist | Out-Null
+          Copy-Item (Join-Path $source 'build\Release\proyectoGrafica_OpenGL.exe') $dist
+          Copy-Item (Join-Path $source 'build\assets') $dist -Recurse -Force
+          Copy-Item (Join-Path $source 'build\resources') $dist -Recurse -Force
+          Compress-Archive -Path (Join-Path $dist '*') -DestinationPath (Join-Path $env:GITHUB_WORKSPACE 'proyectoGrafica_OpenGL-Windows-x64.zip') -Force
+
+      - name: Upload executable package
+        uses: actions/upload-artifact@v4
+        with:
+          name: proyectoGrafica_OpenGL-Windows-x64
+          path: proyectoGrafica_OpenGL-Windows-x64.zip
+          if-no-files-found: error
+          retention-days: 30
+name: Build Windows executable
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - proyectoGrafica_OpenGL.zip
+      - .github/workflows/build-windows.yml
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: windows-2022
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Build portable x64 package
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $source = Join-Path $env:GITHUB_WORKSPACE 'source\proyectoGrafica_OpenGL'
+          Expand-Archive -LiteralPath (Join-Path $env:GITHUB_WORKSPACE 'proyectoGrafica_OpenGL.zip') -DestinationPath (Join-Path $env:GITHUB_WORKSPACE 'source') -Force
+
+          $env:VCPKG_ROOT = Join-Path $env:RUNNER_TEMP 'vcpkg'
+          git clone --depth 1 https://github.com/microsoft/vcpkg.git $env:VCPKG_ROOT
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          & (Join-Path $env:VCPKG_ROOT 'bootstrap-vcpkg.bat') -disableMetrics
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
+          $toolchain = Join-Path $env:VCPKG_ROOT 'scripts\buildsystems\vcpkg.cmake'
+          cmake -S $source -B (Join-Path $source 'build') -G 'Visual Studio 17 2022' -A x64 `
+            "-DCMAKE_TOOLCHAIN_FILE=$toolchain" `
             -DVCPKG_TARGET_TRIPLET=x64-windows-static
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           cmake --build (Join-Path $source 'build') --config Release --parallel
