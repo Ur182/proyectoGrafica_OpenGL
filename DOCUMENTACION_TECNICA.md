@@ -25,7 +25,7 @@ Los nodos exportados incluyen el jugador, el árbitro, porterías, balón, cuatr
 
 - GLFW crea la ventana y recoge teclado, ratón y rueda.
 - GLEW inicializa las funciones de OpenGL.
-- Assimp importa las mallas, jerarquías, materiales, texturas embebidas, pesos de piel y clips de animación desde glTF/GLB.
+- Assimp importa las mallas, jerarquías, materiales, texturas embebidas, pesos de piel y clips de animación desde glTF/GLB. Las texturas se convierten a RGBA antes de subirlas a OpenGL para conservar un formato de píxel consistente.
 - GLM calcula matrices de cámara, proyección y transformación.
 - Los shaders GLSL aplican texturas e iluminación por fragmento.
 - El HUD dibuja el marcador en pantalla.
