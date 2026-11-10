@@ -34,6 +34,7 @@ constexpr float CALL_START=174.0f/24.0f, CALL_END=234.0f/24.0f, CART_START=245.0
 
 static std::string readFile(const fs::path& p){std::ifstream f(p,std::ios::binary);if(!f)throw std::runtime_error("No pude abrir "+p.string());std::ostringstream s;s<<f.rdbuf();return s.str();}
 static std::string low(std::string s){std::transform(s.begin(),s.end(),s.begin(),[](unsigned char c){return char(std::tolower(c));});return s;}
+static float ease(float a,float b,float x){float u=std::clamp((x-a)/(b-a),0.f,1.f);return u*u*(3.f-2.f*u);}
 static glm::mat4 cv(const aiMatrix4x4& m){return glm::mat4(m.a1,m.b1,m.c1,m.d1,m.a2,m.b2,m.c2,m.d2,m.a3,m.b3,m.c3,m.d3,m.a4,m.b4,m.c4,m.d4);}
 static glm::vec3 cv(const aiVector3D& v){return {v.x,v.y,v.z};}
 static glm::quat cv(const aiQuaternion& q){return {q.w,q.x,q.y,q.z};}
@@ -64,7 +65,6 @@ public:
  void drawDepth(const Shader& s,float t){sceneTime=t;finalBones.assign(bones.size(),glm::mat4(1));auto clips=clipsAt(t);updateBones(root,glm::mat4(1),clips);drawDepthNode(root,glm::mat4(1),clips,s);drawTeamInstances(s,clips,true);}
 private:
  static const Node* findPlayer(const Node& n){if(n.src&&low(n.src->mName.C_Str())=="control | jugador carrera")return &n;for(const auto& c:n.children)if(auto p=findPlayer(c))return p;return nullptr;}
- static float ease(float a,float b,float x){float u=std::clamp((x-a)/(b-a),0.f,1.f);return u*u*(3.f-2.f*u);}
  std::vector<glm::vec3> teamPositions()const{std::vector<glm::vec3> p; p.push_back({-36,0,8}); // jugador de referencia (la animacion de gol)
   const glm::vec3 home[10]={{-47,0,0},{-30,0,-23},{-30,0,-8},{-30,0,8},{-30,0,23},{-14,0,-17},{-14,0,0},{-14,0,17},{-3,0,-12},{-3,0,-28}};
   const glm::vec3 away[11]={{47,0,0},{30,0,-23},{30,0,-8},{30,0,8},{30,0,23},{14,0,-17},{14,0,0},{14,0,17},{3,0,-12},{3,0,0},{3,0,12}};
