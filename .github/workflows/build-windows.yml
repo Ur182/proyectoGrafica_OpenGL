@@ -27,6 +27,16 @@ jobs:
           $env:VCPKG_ROOT = Join-Path $env:RUNNER_TEMP 'vcpkg'
           git clone --depth 1 https://github.com/microsoft/vcpkg.git $env:VCPKG_ROOT
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
+          # The upstream Assimp patch endpoint is rate-limited on hosted runners.
+          $assimpPort = Join-Path $env:VCPKG_ROOT 'ports\assimp\portfile.cmake'
+          $portText = Get-Content -LiteralPath $assimpPort -Raw
+          $oldPatchUrl = 'https://github.com/assimp/assimp/commit/9a486a72e43f92222969bfac7054554f97dd253f.patch?full_index=1'
+          if (-not $portText.Contains($oldPatchUrl)) { throw 'No encontré la URL esperada del parche Assimp en el portfile de vcpkg.' }
+          $portText = $portText.Replace($oldPatchUrl, 'https://patch-diff.githubusercontent.com/raw/assimp/assimp/pull/6627.patch')
+          $portText = $portText.Replace('209d79e2366567cc8090e06684ef2da795a317c81d17694590e95051a62123219ab9b700bd0640e5ae0dd0d8bb9d8c9377dadc9168f08968d3b970244dbdc353', '2e1533bb3f0679ea3bdfb5525f02bc939be6e8636973984ddf1657566b6ae9685b97282b2320738c6a6e4255b2aed7c0824151e146c52c55bb8588f712b208e7')
+          Set-Content -LiteralPath $assimpPort -Value $portText -NoNewline -Encoding utf8
+
           & (Join-Path $env:VCPKG_ROOT 'bootstrap-vcpkg.bat') -disableMetrics
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
