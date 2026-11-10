@@ -19,7 +19,7 @@ Las tres zonas principales distinguidas en el modelo son:
 2. **Gradas**: nivel inferior y nivel superior alrededor del campo.
 3. **Accesos y plaza exterior**: entradas, fachada y pavimento perimetral.
 
-Los nodos exportados incluyen el jugador, el árbitro, la portería, el balón, cuatro banderines en las esquinas, autobús, carrito, marcador y reflectores. Añadir una captura general y acercamientos que demuestren su ubicación y visibilidad.
+Los nodos exportados incluyen el jugador, el árbitro, porterías, balón, cuatro banderines, autobús, carrito de alimentos, vehículo de emergencias, marcador, mascota, trofeo, podio, bancas, reflectores, gradas y accesos. El programa instancia el rig del jugador para formar 11 participantes por equipo. Añadir capturas reales que demuestren su ubicación y visibilidad en Windows.
 
 ## 3. Arquitectura del programa
 
@@ -32,7 +32,7 @@ Los nodos exportados incluyen el jugador, el árbitro, la portería, el balón, 
 
 ## 4. Animaciones e interacción
 
-Los clips principales del GLB son `Jugador CHICHARITO Carrera.004`, `Balon_GolAction.005` y `Arbitro Señal de falta.004`. La aplicación evalúa canales de posición, rotación y escala y matrices de hueso para deformar las mallas. `Espacio` reproduce/pausa; `G` inicia la secuencia del gol y `F` la señal del árbitro. `J` y `K` modifican el marcador.
+La aplicación inicia automáticamente una secuencia de 20 segundos. Primero sigue desde arriba el autobús acercándose al estadio; después corta a una vista aérea de los 22 jugadores y el árbitro en el centro; continúa con la carrera y el balón entrando en la portería, la señal del árbitro y el aumento automático del marcador; al final entra el vehículo de emergencias, se acerca a un jugador y ambos salen hacia el exterior. La formación reutiliza el rig del modelo cargado y las mallas con piel; una instancia cambia de posición para representar el traslado. Las luces y ruedas se dibujan desde los modelos existentes. `Espacio` pausa/reanuda, `R` vuelve al principio, `G` salta al gol y `F` a la señal arbitral. `1`, `2` y `3` cambian las cámaras.
 
 Documentar aquí los fotogramas/tiempos reales observados tras la prueba y adjuntar capturas o enlace al video de demostración: [pendiente].
 
@@ -41,17 +41,17 @@ Documentar aquí los fotogramas/tiempos reales observados tras la prueba y adjun
 La primera ejecución mostró varios errores de escala y ubicación en la exportación GLB. Se corrigieron en la escena, conservando la animación esquelética del jugador y el árbitro:
 
 - **Jugador:** el canal de traslación del clip `Control | jugador carreraAction.003` se retargeteó para recorrer el eje longitudinal desde `x=-36` hasta `x=-48`, con `z=8`. Así permanece dentro de los límites de la cancha (`x=±52.5`) y termina cerca del área de gol. La cámara de transmisión sigue la misma trayectoria.
-- **Árbitro:** su raíz se ubicó en `(-42, 0, 5)`, dentro del área de juego para que la tecla `F` muestre la señal sin dejarlo fuera de la línea.
-- **Carrito de alimentos:** las mallas de origen estaban expresadas a una escala desproporcionada; la raíz se escala a `0.05` y se coloca en el corredor lateral. El vehículo de emergencias se mueve a la zona exterior de acceso.
+- **Árbitro:** su raíz queda en el centro del campo para iniciar entre ambos equipos; la tecla `F` permite revisar la señal.
+- **Carrito de alimentos:** las mallas de origen estaban expresadas a una escala desproporcionada; la raíz se escala a `0.05` y se coloca en el corredor lateral. El vehículo de emergencias se escala a `0.22` en tiempo de ejecución y entra desde el acceso exterior para llegar a la banda y retirarse con un jugador.
 - **Porterías:** se construyeron dos marcos de aproximadamente `7.32 × 2.44 m` con retícula de red. Se ubican en `x=-52.5` y `x=52.5`, centrados en `z=0`. La portería izquierda conserva el balón animado. Se orientó el clip para que el balón avance desde el campo, cruce la línea y termine dentro de la red.
 - **Banderines:** sus cuatro raíces se alinean con las esquinas del campo en `(±52.5, ±34)`.
 - **Luminarias:** las cuatro torres se reconstruyeron como mástiles verticales de unos `22 m` con cabezales de focos y se colocaron en el perímetro, aproximadamente en `(±82, ±52)`. Los focos dinámicos apuntan hacia el centro y se activan con `N`/`L`.
 
-El script `tools/ajustar_escena.py` documenta los cambios de GLB sobre la exportación original. Se ejecutó para producir la escena ajustada; no volver a ejecutarlo sobre esa escena porque agrega los nodos auxiliares. La nueva versión requiere recompilar y revisar visualmente en Windows los cuatro puntos: portería, banderines, escala del carrito y luminarias.
+El script `tools/ajustar_escena.py` documenta los cambios de GLB sobre la exportación original. Se ejecutó para producir la escena ajustada; no volver a ejecutarlo sobre esa escena porque agrega nodos auxiliares. La secuencia y las nuevas instancias requieren compilar y revisar visualmente en Windows. Ajustar posiciones/escala si la VM muestra penetraciones o solapamientos.
 
 ## 5. Cámaras e iluminación
 
-La cámara de primera persona permite caminar y mirar alrededor. La cámara de transmisión orbita el área de juego. La proyección es perspectiva. `N` alterna la apariencia diurna/nocturna; `L` conmuta los cuatro focos en modo noche. Se calcula un mapa de profundidad direccional de 2048×2048 cada fotograma y se aplica un filtrado PCF de 3×3 en GLSL. Confirmar visualmente el resultado en el equipo de entrega.
+La cámara de primera persona permite caminar y mirar alrededor. La cámara de transmisión sigue al jugador. La cámara cinematográfica hace cortes entre la toma de dron, la vista de equipos, el gol y el vehículo. La proyección es perspectiva. `N` alterna la apariencia diurna/nocturna; `L` conmuta los cuatro focos. Se calcula un mapa de profundidad direccional de 2048×2048 cada fotograma y se aplica un filtrado PCF de 3×3 en GLSL. Confirmar visualmente el resultado en el equipo de entrega.
 
 ## 6. Compilación y ejecución
 

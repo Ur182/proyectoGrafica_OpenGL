@@ -1,24 +1,74 @@
-# Proyecto de gráfica: escenario deportivo OpenGL
+# Proyecto de gráfica interactivo
 
-Repositorio con la documentación, una copia del código C++ principal y un ZIP con el proyecto completo para compilar.
+Aplicación C++ con OpenGL 3.3 para visualizar el escenario deportivo exportado desde Blender. El proyecto incluye los archivos fuente, el modelo GLB, shaders y documentación.
 
-## Archivos
+## Contenido
 
-- `DOCUMENTACION_TECNICA.md`: memoria técnica y matriz de requisitos.
-- `ACTA.md`: acta para completar con los datos y firmas reales.
-- `main.cpp`: copia individual del código C++ principal.
-- `proyectoGrafica_OpenGL.zip`: proyecto completo, con CMake, dependencias, shaders, escena GLB ajustada y código fuente organizado.
+- `assets/escenario.glb`: escena exportada con materiales, texturas, personajes y clips de animación del archivo Blender.
+- `src/main.cpp`: importación de la escena con Assimp, animación por huesos, cámaras, iluminación, controles y marcador.
+- La formación se completa con 22 instancias del rig de jugador ya incluido en el GLB; no requiere descargar modelos nuevos.
+- `resources/shaders`: shaders OpenGL 3.3 para materiales, iluminación y HUD.
+- `vcpkg.json`: dependencias reproducibles.
+- `tools/ajustar_escena.py`: corrección documentada de escala y colocación para la escena GLB original. Se ejecuta una sola vez sobre la exportación sin corregir.
 
-## Ajustes de escena
+La exportación original contiene 452 nodos, 387 mallas, 93 materiales, 9 imágenes, dos esqueletos y 19 clips. Tras reconstruir las porterías y las torres, la escena ajustada contiene 563 nodos. Se conservan el jugador, el árbitro, los cuatro banderines y los clips `Jugador CHICHARITO Carrera.004`, `Balon_GolAction.005` y `Arbitro Señal de falta.004`.
 
-La última revisión corrige la escala del carrito, mantiene al jugador dentro de la cancha, coloca al árbitro en el área, alinea los cuatro banderines con las esquinas, incluye porterías en ambos extremos y reconstruye las cuatro torres de luminarias. `G` activa la jugada del gol y `F` la señal del árbitro. El ZIP contiene el detalle y el script de ajustes.
+La secuencia ahora inicia automáticamente con una toma aérea del autobús llegando al estadio, pasa a una vista general de los dos equipos (11 contra 11) y el árbitro en el círculo central, muestra la carrera y el balón entrando a la portería, suma un gol al marcador y termina con el vehículo de emergencias recogiendo a un jugador lesionado. La escena también muestra el carrito de alimentos, banderines, dos porterías, luminarias, marcador, mascota, trofeo, podio, bancas, gradas y accesos. El árbitro se coloca en el centro; el vehículo de emergencias está reducido y tiene una ruta de entrada y salida. La integración de varios jugadores reutiliza el rig cargado del GLB y su animación de huesos.
 
-## Clonar y compilar
+## Compilar en Windows con Visual Studio 2022
+
+Instala Visual Studio 2022 con la carga de trabajo **Desarrollo para el escritorio con C++**, CMake y Git. Instala vcpkg y define `VCPKG_ROOT` en PowerShell:
 
 ```powershell
-git clone https://github.com/Ur182/proyectoGrafica_OpenGL.git
+$env:VCPKG_ROOT = "C:\vcpkg"
+& "$env:VCPKG_ROOT\bootstrap-vcpkg.bat"
 ```
 
-Después de clonar, extrae `proyectoGrafica_OpenGL.zip`. Abre la carpeta extraída en Visual Studio 2022 con **File > Open > Folder** y sigue el README incluido en el ZIP para instalar dependencias, compilar en x64 y ejecutar.
+Desde esta carpeta del proyecto:
 
-GitHub Actions compila y empaqueta una versión Windows x64 cada vez que se actualiza el ZIP. La compilación del paquete anterior pasó; esta escena ajustada aún debe compilarse y revisarse visualmente en Windows.
+```powershell
+cmake -S . -B build -G "Visual Studio 17 2022" -A x64 `
+  -DCMAKE_TOOLCHAIN_FILE="$env:VCPKG_ROOT\scripts\buildsystems\vcpkg.cmake"
+cmake --build build --config Release
+.\build\Release\proyectoGrafica_OpenGL.exe
+```
+
+La primera configuración descarga Assimp, GLEW, GLFW, GLM y stb con vcpkg. Se requiere conexión a internet la primera vez. También se puede abrir esta carpeta como proyecto CMake en Visual Studio.
+
+## Controles
+
+| Tecla/entrada | Acción |
+| --- | --- |
+| `Espacio` | Reproducir o pausar la secuencia completa |
+| `R` | Regresar al inicio y pausar |
+| `G` | Ir a la jugada de gol y reproducir desde ahí |
+| `F` | Ir a la señal del árbitro y reproducir desde ahí |
+| `1` / `2` | Cámara en primera persona / cámara de transmisión |
+| `3` | Cámara cinematográfica con tomas automáticas de bus, partido y emergencia |
+| `W A S D` | Caminar en primera persona; en transmisión, orbitar y acercar/alejar |
+| Ratón | Girar la cámara; rueda para cambiar el campo de visión |
+| `L` | Encender o apagar las luces del estadio |
+| `N` | Cambiar entre día y noche |
+| `J` / `K` | Sumar un gol al equipo local / visitante |
+| `Retroceso` | Reiniciar el marcador |
+| `Esc` | Cerrar |
+
+## Relación con los requisitos de la consigna
+
+| Requisito | Implementación / evidencia prevista |
+| --- | --- |
+| OpenGL moderno | Contexto OpenGL 3.3 Core y shaders GLSL 330 |
+| Escenario deportivo y zonas | GLB con cancha y marcaciones, gradas en nivel inferior y superior, además de accesos/plaza exterior. |
+| Personajes y modelado jerárquico | Los rigs del jugador y del árbitro se conservan en el GLB; Assimp importa los pesos, huesos y jerarquías. |
+| Carga de modelos | Importador de GLB en tiempo de ejecución mediante Assimp. |
+| Perspectiva, materiales y texturas | Proyección perspectiva; mapas embebidos del GLB; shader de iluminación difusa y mapa de sombras direccionales PCF. |
+| Iluminación y día/noche | Luz ambiental/direccional y cuatro focos conmutables en modo noche (`N`, `L`). Mapa de sombras direccionales PCF actualizado cada fotograma; `N` y `L` controlan el ciclo día/noche y los focos. |
+| Cámara en primera y tercera persona | `1` activa cámara caminable y ratón; `2` activa cámara de transmisión orbital. |
+| Animación por transformaciones y huesos | Clips del GLB para carrera, balón, señal y bus; la secuencia reproduce el gol y actualiza el marcador, y anima la llegada/salida del vehículo médico y el traslado del jugador lesionado. |
+| Interacción | Teclado, ratón, luces y marcador local. `G` y `F` permiten mostrar directamente las secuencias principales. |
+| Sonido (opcional) | No incluido. |
+| Memoria y Acta | Plantillas en `DOCUMENTACION_TECNICA.md` y `ACTA.md`; completar autores, capturas, video, explicación de zonas y resultados al ejecutar en Windows. |
+
+## Estado de verificación
+
+Esta versión amplía el código y el GLB; no se pudo compilar aquí porque CMake no está instalado en el entorno actual. En Windows x64, vuelve a compilar con los comandos anteriores y revisa la formación, las tomas, el gol/marcador y el traslado médico en la VM. Los campos de integrantes, firmas, capturas comparativas y video de demostración siguen requiriendo información y evidencia real del equipo.
