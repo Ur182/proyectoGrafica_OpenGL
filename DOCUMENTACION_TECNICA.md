@@ -32,7 +32,7 @@ Los nodos exportados incluyen el jugador, el árbitro, porterías, balón, cuatr
 
 ## 4. Animaciones e interacción
 
-La aplicación inicia automáticamente una secuencia de 20 segundos. Primero sigue desde arriba el autobús acercándose al estadio; después corta a una vista aérea de los 22 jugadores y el árbitro en el centro; continúa con la carrera y el balón entrando en la portería, la señal del árbitro y el aumento automático del marcador; al final entra el vehículo de emergencias, se acerca a un jugador y ambos salen hacia el exterior. La formación reutiliza el rig del modelo cargado y las mallas con piel; una instancia cambia de posición para representar el traslado. Las luces y ruedas se dibujan desde los modelos existentes. `Espacio` pausa/reanuda, `R` vuelve al principio, `G` salta al gol y `F` a la señal arbitral. `1`, `2` y `3` cambian las cámaras.
+La aplicación inicia automáticamente una secuencia de 20 segundos. Primero sigue desde arriba el autobús acercándose al estadio; después corta a una vista aérea de los 22 jugadores y el árbitro en el centro; continúa con la carrera y el balón entrando en la portería, la señal del árbitro y el aumento automático del marcador; al marcar, el marcador tiene un pulso de escala; al final entra el vehículo de emergencias, se acerca a un jugador y ambos salen hacia el exterior. La formación reutiliza el rig del modelo cargado y las mallas con piel; una instancia cambia de posición para representar el traslado. Las luces y ruedas se dibujan desde los modelos existentes. `Espacio` pausa/reanuda, `R` vuelve al principio, `G` salta al gol y `F` a la señal arbitral. `1`, `2` y `3` cambian las cámaras.
 
 Documentar aquí los fotogramas/tiempos reales observados tras la prueba y adjuntar capturas o enlace al video de demostración: [pendiente].
 
@@ -57,20 +57,34 @@ La cámara de primera persona permite caminar y mirar alrededor. La cámara de t
 
 Seguir los comandos de `README.md` con Visual Studio 2022 Win32 (x86) y vcpkg. Si se cierra inesperadamente, revisar `startup.log` junto al ejecutable. Registrar aquí la versión de Windows, el GPU, la configuración compilada y el resultado real:
 
-- Resultado de compilación: [pendiente]
-- Resultado de ejecución: [pendiente]
-- Problemas observados y correcciones: [pendiente]
+- Resultado de compilación: el flujo de Windows terminó correctamente para Win32 (x86).
+- Resultado de ejecución: pendiente de volver a probar en la VM después de normalizar las texturas a RGBA. La compilación anterior terminaba con una violación de acceso durante la carga del GLB; la nueva versión agrega `startup.log` para registrar la fase exacta si vuelve a ocurrir.
+- Entorno de prueba real (versión de Windows, GPU/VM): [completar después de probar].
+- Resultado visual y problemas restantes: [completar con observaciones y capturas de la VM].
 
 ## 7. Metodología y comparación
 
-Describir el flujo Blender → exportación GLB → carga en Assimp → evaluación de animación → renderizado OpenGL. Comparar el resultado con la escena original de Blender usando capturas equivalentes. Comentar diferencias en iluminación, materiales, orientación, escala, animación y rendimiento: [pendiente].
+Se propone Kanban, con columnas Pendiente, En proceso, Revisión y Terminado. Las tareas se dividen por entregable (modelado, exportación, integración, animaciones, controles, documentación y pruebas), y cada ajuste se revisa en la escena antes de cerrarse. Es adecuado para el equipo pequeño y para las correcciones iterativas de integración que ha requerido el proyecto.
+
+**Comparación:** Scrum aporta iteraciones planificadas y reuniones de seguimiento, pero puede introducir más coordinación de la necesaria para un equipo de 2–3 personas. Cascada facilita ordenar fases y fechas, pero los cambios que aparecen al integrar modelos se devuelven con más coste a etapas anteriores. Kanban mantiene el trabajo visible y permite priorizar continuamente los bloqueos y correcciones.
+
+**Etapas documentadas:**
+
+1. **Planeación:** elegir fútbol soccer, listar requisitos del PDF, identificar modelos existentes y separar tareas. Falta registrar la aprobación del profesor, integrantes y fechas reales.
+2. **Diseño:** organizar cancha, zona técnica/servicio y gradas/accesos; establecer la secuencia de autobús, partido, gol y atención médica; definir controles y cámaras.
+3. **Implementación:** preparar y corregir el GLB en Blender; cargarlo con Assimp; implementar renderizado, texturas, sombras, cámaras, animaciones por huesos/transformaciones, marcador e interacción en C++/OpenGL.
+4. **Pruebas:** compilar Win32 mediante el flujo de Windows; ejecutar en la VM; revisar visualmente personajes, posiciones, animaciones, luces, sombras, marcador y controles. La compilación está confirmada; la ejecución visual posterior a la corrección de texturas aún debe registrarse.
+
+La comparativa visual final debe mostrar capturas equivalentes de Blender y OpenGL. Comentar cambios observados de materiales, orientación, escala, iluminación, animación y rendimiento: [completar después de la prueba en VM].
 
 ## 8. Reparto de trabajo
 
 | Integrante | Responsabilidad | Evidencia |
 | --- | --- | --- |
-| [nombre] | [modelado/animación/programación/documentación] | [captura o archivo] |
+| [Nombre 1] | Coordinación e integración (ajustar a trabajo real) | [captura o archivo] |
+| [Nombre 2] | Modelado, animación y exportación (ajustar a trabajo real) | [captura o archivo] |
+| [Nombre 3, si aplica] | Programación OpenGL y pruebas (ajustar a trabajo real) | [captura o archivo] |
 
 ## 9. Evidencias por requisito
 
-Añadir capturas con rótulos: escena completa, tres zonas, personajes, texturas, cámara primera persona, cámara transmisión, día/noche, luces, marcador y secuencias de carrera/gol/árbitro. Añadir el video de demostración solicitado por la consigna.
+Añadir capturas con rótulos: escena completa, tres zonas, 11 contra 11 y árbitro, texturas, cámara primera persona, cámara de transmisión, toma cinematográfica, día/noche, reflectores, marcador antes/después del gol y secuencia del vehículo médico. Añadir el video de demostración solicitado por la consigna y la comparativa con Blender. No sustituir estas evidencias por imágenes de referencia: deben capturarse de la ejecución real.

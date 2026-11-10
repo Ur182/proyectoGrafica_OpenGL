@@ -52,6 +52,12 @@ El preset `windows-win32` configura Visual Studio 2022 para compilar Win32 (x86)
 | `Retroceso` | Reiniciar el marcador |
 | `Esc` | Cerrar |
 
+## Metodología y entregables
+
+La propuesta para el equipo es Kanban: dividir el trabajo en tareas pequeñas y moverlas por Pendiente, En proceso, Revisión y Terminado. La memoria compara Kanban con Scrum y Cascada. El Acta contiene el deporte, la justificación, las tres zonas, la propuesta de roles y los acuerdos; hay que reemplazar los campos pendientes por nombres, aprobación y fechas reales.
+
+Para cerrar la entrega según la consigna todavía deben agregarse capturas reales de la ejecución Win32, una comparativa visual con Blender y el video demostrativo. La ejecución en la VM también se debe volver a confirmar con la versión más reciente.
+
 ## Relación con los requisitos de la consigna
 
 | Requisito | Implementación / evidencia prevista |
@@ -63,7 +69,7 @@ El preset `windows-win32` configura Visual Studio 2022 para compilar Win32 (x86)
 | Perspectiva, materiales y texturas | Proyección perspectiva; mapas embebidos del GLB; shader de iluminación difusa y mapa de sombras direccionales PCF. |
 | Iluminación y día/noche | Luz ambiental/direccional y cuatro focos conmutables en modo noche (`N`, `L`). Mapa de sombras direccionales PCF actualizado cada fotograma; `N` y `L` controlan el ciclo día/noche y los focos. |
 | Cámara en primera y tercera persona | `1` activa cámara caminable y ratón; `2` activa cámara de transmisión orbital. |
-| Animación por transformaciones y huesos | Clips del GLB para carrera, balón, señal y bus; la secuencia reproduce el gol y actualiza el marcador, y anima la llegada/salida del vehículo médico y el traslado del jugador lesionado. |
+| Animación por transformaciones y huesos | Clips del GLB para carrera, balón, señal y bus; la secuencia reproduce el gol, actualiza y pulsa el marcador mediante escala, y anima la llegada/salida del vehículo médico y el traslado del jugador lesionado. |
 | Interacción | Teclado, ratón, luces y marcador local. `G` y `F` permiten mostrar directamente las secuencias principales. |
 | Sonido (opcional) | No incluido. |
 | Memoria y Acta | Plantillas en `DOCUMENTACION_TECNICA.md` y `ACTA.md`; completar autores, capturas, video, explicación de zonas y resultados al ejecutar en Windows. |
