@@ -1,4 +1,4 @@
-name: Build Windows executable
+name: Build Windows Win32 executable
 
 on:
   workflow_dispatch:
@@ -17,7 +17,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Build portable x64 package
+      - name: Build portable Win32 package
         shell: pwsh
         run: |
           $ErrorActionPreference = 'Stop'
@@ -31,25 +31,25 @@ jobs:
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
           $toolchain = Join-Path $env:VCPKG_ROOT 'scripts\buildsystems\vcpkg.cmake'
-          cmake -S $source -B (Join-Path $source 'build') -G 'Visual Studio 17 2022' -A x64 `
+          cmake -S $source -B (Join-Path $source 'build\win32') -G 'Visual Studio 17 2022' -A Win32 `
             "-DCMAKE_TOOLCHAIN_FILE=$toolchain" `
-            -DVCPKG_TARGET_TRIPLET=x64-windows-static `
+            -DVCPKG_TARGET_TRIPLET=x86-windows-static `
             '-DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded$<$<CONFIG:Debug>:Debug>'
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
-          cmake --build (Join-Path $source 'build') --config Release --parallel
+          cmake --build (Join-Path $source 'build\win32') --config Release --parallel
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
           $dist = Join-Path $env:GITHUB_WORKSPACE 'dist'
           New-Item -ItemType Directory -Force -Path $dist | Out-Null
-          Copy-Item (Join-Path $source 'build\Release\proyectoGrafica_OpenGL.exe') $dist
-          Copy-Item (Join-Path $source 'build\assets') $dist -Recurse -Force
-          Copy-Item (Join-Path $source 'build\resources') $dist -Recurse -Force
-          Compress-Archive -Path (Join-Path $dist '*') -DestinationPath (Join-Path $env:GITHUB_WORKSPACE 'proyectoGrafica_OpenGL-Windows-x64.zip') -Force
+          Copy-Item (Join-Path $source 'build\win32\Release\proyectoGrafica_OpenGL.exe') $dist
+          Copy-Item (Join-Path $source 'build\win32\assets') $dist -Recurse -Force
+          Copy-Item (Join-Path $source 'build\win32\resources') $dist -Recurse -Force
+          Compress-Archive -Path (Join-Path $dist '*') -DestinationPath (Join-Path $env:GITHUB_WORKSPACE 'proyectoGrafica_OpenGL-Windows-Win32.zip') -Force
 
       - name: Upload executable package
         uses: actions/upload-artifact@v4
         with:
-          name: proyectoGrafica_OpenGL-Windows-x64
-          path: proyectoGrafica_OpenGL-Windows-x64.zip
+          name: proyectoGrafica_OpenGL-Windows-Win32
+          path: proyectoGrafica_OpenGL-Windows-Win32.zip
           if-no-files-found: error
           retention-days: 30

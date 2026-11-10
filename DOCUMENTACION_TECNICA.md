@@ -6,7 +6,7 @@
 
 - Deporte y escenario: fútbol; [nombre del escenario]
 - Integrantes: [nombres]
-- Plataforma de ejecución: Windows 10/11, Visual Studio 2022, x64
+- Plataforma de ejecución: Windows 10/11, Visual Studio 2022, Win32 (x86)
 - API gráfica: OpenGL 3.3 Core, GLSL 330
 
 ## 2. Organización de la escena
@@ -55,7 +55,7 @@ La cámara de primera persona permite caminar y mirar alrededor. La cámara de t
 
 ## 6. Compilación y ejecución
 
-Seguir los comandos de `README.md` con Visual Studio 2022 x64 y vcpkg. Registrar aquí la versión de Windows, el GPU, la configuración compilada y el resultado real:
+Seguir los comandos de `README.md` con Visual Studio 2022 Win32 (x86) y vcpkg. Registrar aquí la versión de Windows, el GPU, la configuración compilada y el resultado real:
 
 - Resultado de compilación: [pendiente]
 - Resultado de ejecución: [pendiente]

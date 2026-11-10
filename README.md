@@ -17,7 +17,7 @@ La secuencia ahora inicia automáticamente con una toma aérea del autobús lleg
 
 ## Compilar en Windows con Visual Studio 2022
 
-Instala Visual Studio 2022 con la carga de trabajo **Desarrollo para el escritorio con C++**, CMake y Git. Instala vcpkg y define `VCPKG_ROOT` en PowerShell:
+Instala Visual Studio 2022 con la carga de trabajo **Desarrollo para el escritorio con C++** (incluye herramientas x86/x64), CMake y Git. Instala vcpkg y define `VCPKG_ROOT` en PowerShell:
 
 ```powershell
 $env:VCPKG_ROOT = "C:\vcpkg"
@@ -27,13 +27,12 @@ $env:VCPKG_ROOT = "C:\vcpkg"
 Desde esta carpeta del proyecto:
 
 ```powershell
-cmake -S . -B build -G "Visual Studio 17 2022" -A x64 `
-  -DCMAKE_TOOLCHAIN_FILE="$env:VCPKG_ROOT\scripts\buildsystems\vcpkg.cmake"
-cmake --build build --config Release
-.\build\Release\proyectoGrafica_OpenGL.exe
+cmake --preset windows-win32
+cmake --build build/win32 --config Release
+.\build\win32\Release\proyectoGrafica_OpenGL.exe
 ```
 
-La primera configuración descarga Assimp, GLEW, GLFW, GLM y stb con vcpkg. Se requiere conexión a internet la primera vez. También se puede abrir esta carpeta como proyecto CMake en Visual Studio.
+El preset `windows-win32` configura Visual Studio 2022 para compilar Win32 (x86) con el triplet `x86-windows-static`. La primera configuración descarga Assimp, GLEW, GLFW, GLM y stb con vcpkg; se requiere internet. Abre la carpeta que contiene `CMakeLists.txt` en Visual Studio, selecciona el preset `windows-win32` y compila `Release`.
 
 ## Controles
 
@@ -71,4 +70,4 @@ La primera configuración descarga Assimp, GLEW, GLFW, GLM y stb con vcpkg. Se r
 
 ## Estado de verificación
 
-Esta versión amplía el código y el GLB; no se pudo compilar aquí porque CMake no está instalado en el entorno actual. En Windows x64, vuelve a compilar con los comandos anteriores y revisa la formación, las tomas, el gol/marcador y el traslado médico en la VM. Los campos de integrantes, firmas, capturas comparativas y video de demostración siguen requiriendo información y evidencia real del equipo.
+La entrega está configurada para Win32 (x86), que es la plataforma requerida para tu prueba. La compilación local en este entorno no fue posible porque CMake y GLEW no están instalados; el flujo de Windows compila un paquete Win32. Revisa la formación, las tomas, el gol/marcador y el traslado médico en la VM. Los campos de integrantes, firmas, capturas comparativas y video de demostración siguen requiriendo información y evidencia real del equipo.
